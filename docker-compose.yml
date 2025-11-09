@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  localstack:
+    image: localstack/localstack:4.5.0
+    container_name: localstack
+    ports:
+      - "4566:4566"          # Endpoint unificado
+      - "4510-4559:4510-4559"
+    environment:
+      - SERVICES=lambda,s3,apigateway,cloudwatch,logs,iam,sts
+      - AWS_DEFAULT_REGION=us-east-1
+      - DEBUG=1
+    volumes:
+      - ./localstack-data:/var/lib/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - devnet
+    restart: unless-stopped
+
+  go-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: stori-api-local
+    depends_on:
+      - localstack
+    environment:
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_ENDPOINT_URL: http://localstack:4566
+      AWS_S3_USE_PATH_STYLE: "true"
+
+      S3_BUCKET_NAME: stori-transactions-local
+      S3_REGION: us-east-1
+
+
+    networks:
+      - devnet
+    ports:
+      - "9001:8080"
+    volumes:
+      - ./:/src
+    restart: unless-stopped
+
+networks:
+  devnet:
+    driver: bridge
