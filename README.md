@@ -28,32 +28,39 @@ El código sigue un estilo **hexagonal (puertos y adaptadores)**, separando la l
 ## 🧱 Estructura del proyecto
 
 ```text
-.
-├── cmd/
-│   └── lambda_api/              # Punto de entrada de la Lambda (main.go)
-│
-├── internal/
-│   ├── core/
-│   │   ├── application/         # Casos de uso (UploadService)
-│   │   └── ports/               # Interfaces (puertos in/out)
-│   │
-│   ├── infra/
-│   │   ├── aws/                 # Cliente AWS SDK (S3)
-│   │   ├── bootstrap/           # Inicialización de dependencias
-│   │   ├── config/              # Configuración por variables de entorno
-│   │   └── logger/              # Logging estructurado
-│   │
-│   └── interfaces/
-│       ├── in/
-│       │   └── apigw/           # Adaptador de entrada (API Gateway Handler)
-│       └── out/
-│           └── s3uploader/      # Adaptador de salida (S3 uploader)
-│
-├── Dockerfile                   # Build de la imagen Lambda
-├── docker-compose.yml           # Entorno local / LocalStack
-├── Makefile                     # Automatización de build / test / docker
-├── go.mod                       # Definición del módulo Go
-└── README.md
+└── 📁stori-api
+    └── 📁cmd
+        └── 📁lambda_api
+            ├── main.go
+    └── 📁internal
+        └── 📁core
+            └── 📁application
+                ├── upload_service.go
+            └── 📁ports
+                └── 📁in
+                    ├── upload_port.go
+        └── 📁infra
+            └── 📁aws
+                └── 📁s3client
+                    ├── s3client.go
+            └── 📁bootstrap
+                ├── upload_api_bootstrap.go
+            └── 📁config
+                ├── config.go
+            └── 📁logger
+                ├── logger.go
+        └── 📁interfaces
+            └── 📁in
+                └── 📁apigw
+                    ├── upload_handler.go
+    ├── .dockerignore
+    ├── .gitignore
+    ├── docker-compose.yml
+    ├── Dockerfile
+    ├── go.mod
+    ├── go.sum
+    ├── Makefile
+    └── README.md
 ```
 
 ---
